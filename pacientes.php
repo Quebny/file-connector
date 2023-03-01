@@ -17,8 +17,8 @@ if (($handle = fopen("paciente.csv", "r")) !== FALSE) {
             $data[] = 202200 . $row . 0 . 1;
         }
         $patientIDs[] = $data;
-
         $row++;
+        
     }
     fclose($handle);
 }

@@ -1,8 +1,9 @@
 <?php
-
+ini_set('memory_limit', '-1');
 $row = 0;
-$patientNo = 0;
-$patientData;
+$loop = 0;
+// $patientNo = 0;
+// $patientData;
 $patientFile = new SplFileObject('paciente_output.csv', 'r');
 $patientFile->seek(PHP_INT_MAX);
 $tumourFile = new SplFileObject('tumor_output.csv', 'r');
@@ -15,64 +16,102 @@ if (($handle = fopen("paciente_output.csv", "r")) !== FALSE) {
     fclose($handle);
 }
 
-if (($handle = fopen("tumor_output.csv", "r")) !== FALSE) {
-    for ($i = 0; $i < $patientFile->key(); $i++) {
-        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            if ($row == 0) {
-                $data[] = "Tumour ID";
-                $data[] = "Patient ID Tumour Table";
-                $data[] = "Patient Record ID Tumour Table";
-            } else {
 
-                if ($data[0] != $tumoursData[$row - 1][0]) {
-                    $tumourCount++;
+for ($i = 0; $i < $patientFile->key(); $i++) {
+    $row = 0;
+    if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
+        if (($handle2 = fopen("tumor_output_2.csv", "w")) !== FALSE) {
+
+            while (($data = fgetcsv($handle1, 1000, ",")) !== FALSE) {
+
+                // $data[] = "Tumour ID";
+                // $data[] = "Patient ID Tumour Table";
+                // $data[] = "Patient Record ID Tumour Table";
+
+                $tumourData[] = $data;
+
+                if ($data[17] == $patientData[$i][0]) {
+                    $data[] = $patientData[$i][50];
+                    $data[] = $patientData[$i][49];
                 }
-                if ($data[17] != $tumoursData[$row - 1][17]) {
-                    $tumourCount = 1;
-                } else {
-                    $tumourCount++;
-                }
+                fputcsv($handle2, $data);
 
-                if ($patientData[$patientNo][0] != $data[17]) {
-                    $patientNo++;
-                }
 
-                // if ($tumourCount < 10)
-                //     $data[] = $patientData[$patientNo][50] . 0 . $tumourCount;
-                // else
-                //     $data[] = $patientData[$patientNo][50] . $tumourCount;
-
-                // // $data[] = $patientData[$patientNo][49];
-                // $data[] = $patientData[$patientNo][50];    
-
-                // var_dump($patientData[$patientNo][0]);
             }
-
-            var_dump("NUMBER: " . $patientNo);
-            $bruh = isset($patientData[$patientNo][0]);
-            var_dump("TUMOUR PTN: " . $data[17]);
-            if ($bruh) {
-                var_dump("PATIENT ID: " . $patientData[$patientNo][0]);
-            }
-            var_dump("----------------------------------------------------------------");
-
-
-            $tumoursData[] = $data;
-
-            $row++;
+            fclose($handle2);
         }
-    }
 
-    fclose($handle);
+        fclose($handle1);
+    }
 }
 
-$handle = fopen('tumor_output.csv', 'w');
+// var_dump($tumourData);
 
-foreach ($tumoursData as $line) {
+$handle = fopen('tumor_output_2.csv', 'w');
+
+foreach ($tumourData as $line) {
     fputcsv($handle, $line);
 }
 
 fclose($handle);
+
+
+
+
+
+// if (($handle = fopen("tumor_output.csv", "r")) !== FALSE) {
+//     if (($handle2 = fopen("paciente_output.csv", "w")) !==)
+
+//         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+//             include("pacientes.php");
+
+//             if ($row == 0) {
+//                 $data[] = "Tumour ID";
+//                 $data[] = "Patient ID Tumour Table";
+//                 $data[] = "Patient Record ID Tumour Table";
+//             } else {
+
+//                 var_dump($patientIDs);
+
+//                 // if ($data[0] != $tumoursData[$row - 1][0]) {
+//                 //     $tumourCount++;
+//                 // }
+//                 // if ($data[17] != $tumoursData[$row - 1][17]) {
+//                 //     $tumourCount = 1;
+//                 // } else {
+//                 //     $tumourCount++;
+//                 // }
+
+//                 // if ($patientData[$patientNo][0] != $data[17]) {
+//                 //     $patientNo++;
+//                 // }
+
+//                 // if ($tumourCount < 10)
+//                 //     $data[] = $patientData[$patientNo][50] . 0 . $tumourCount;
+//                 // else
+//                 //     $data[] = $patientData[$patientNo][50] . $tumourCount;
+
+//                 // // $data[] = $patientData[$patientNo][49];
+//                 // $data[] = $patientData[$patientNo][50];    
+
+//                 // var_dump($patientData[$patientNo][0]);
+//             }
+
+//             $tumoursData[] = $data;
+
+//             $row++;
+//         }
+
+//     fclose($handle);
+// }
+
+// $handle = fopen('tumor_output.csv', 'w');
+
+// foreach ($tumoursData as $line) {
+//     fputcsv($handle, $line);
+// }
+
+// fclose($handle);
 
 // $str = "Patient Row Size: ";
 // echo $str . $patientFile->key();
