@@ -1,9 +1,10 @@
 <?php
 ini_set('memory_limit', '-1');
 $row = 0;
-$loop = 0;
+$count = 1;
+$doOnce = false;
 // $patientNo = 0;
-// $patientData;
+
 $patientFile = new SplFileObject('paciente_output.csv', 'r');
 $patientFile->seek(PHP_INT_MAX);
 $tumourFile = new SplFileObject('tumor_output.csv', 'r');
@@ -17,41 +18,62 @@ if (($handle = fopen("paciente_output.csv", "r")) !== FALSE) {
 }
 
 $newData = array();
-// for ($i = 0; $i < $patientFile->key(); $i++) {
+for ($i = 0; $i < $patientFile->key(); $i++) {
     $row = 0;
     if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
-        if (($handle2 = fopen("tumor_output_2.csv", "w")) !== FALSE) {
+        // if (($handle2 = fopen("tumor_output_2.csv", "w")) !== FALSE) {
 
-            while (($data = fgetcsv($handle1, 1000, ",")) !== FALSE) {
+        while (($data = fgetcsv($handle1, 1000, ",")) !== FALSE) {
 
-                // $data[] = "Tumour ID";
-                // $data[] = "Patient ID Tumour Table";
-                // $data[] = "Patient Record ID Tumour Table";
-
+            if ($row == 0 && !$doOnce) {
+                $doOnce = true;
+                $data[] = "Tumour ID";
+                $data[] = "Patient ID Tumour Table";
+                $data[] = "Patient Record ID Tumour Table";
                 $newData[] = $data;
-
-                if ($data[17] == $patientData[$i][0]) {
-                    $newData[] = $patientData[$i][50];
-                    $newData[] = $patientData[$i][49];
-                    // $data[] = $patientData[$i][50];
-                    // $data[] = $patientData[$i][49];
-                    // var_dump($patientData[$i][50]);
-                    // var_dump($patientData[$i][49]);
-                    var_dump($data);
-                }
-                    fputcsv($handle2, $data);
-
-                
-                $loop++;
             }
-            fclose($handle2);
+
+            if ($row > 0) {
+
+                // if ($data[0] != $tumourData[$row - 1][0]) {
+                //     $count++;
+                // }
+                if ($data[17] != $tumourData[$row - 1][17]) {
+                    $count = 1;
+                } else {
+                    $count++;
+                }
+            }
+
+            if ($data[17] == $patientData[$i][0]) {
+                if ($count < 10) {
+                    $data[] = $patientData[$i][50] . 0 . $count;
+                } else {
+                    $data[] = $patientData[$i][50] . $count;
+                }
+
+                $data[] = $patientData[$i][49];
+                $data[] = $patientData[$i][50];
+                $newData[] = $data;
+                // var_dump($patientData[$i][50]);
+                // var_dump($patientData[$i][49]);
+                // var_dump($data);
+            }
+
+            $row++;
+            // fputcsv($handle2, $data);
+
+            $tumourData[] = $data;
         }
+        //     fclose($handle2);
+        // }
 
         fclose($handle1);
     }
-// }
+}
 
 // var_dump($tumourData);
+// var_dump($newData);
 
 $handle = fopen('tumor_output_2.csv', 'w');
 
@@ -60,7 +82,6 @@ foreach ($newData as $line) {
 }
 
 fclose($handle);
-
 
 
 

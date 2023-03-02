@@ -22,6 +22,6 @@ if (($handle1 = fopen("tumor.csv", "r")) !== FALSE) {
     fclose($handle1);
 }
 
-// include "tumores.php";
+include "tumores.php";
 
 // var_dump($array);

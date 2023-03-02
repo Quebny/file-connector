@@ -1,51 +1,62 @@
 <?php
-
+ini_set('memory_limit', '-1');
 $row = 0;
-$tumourData;
-$fuenteCount = 1;
-// $fuenteCount = 1;
-if (($handle = fopen("tumor_output.csv", "r")) !== FALSE) {
+$count = 1;
+$doOnce = false;
+
+$tumourFile = new SplFileObject('tumor_output.csv', 'r');
+$tumourFile->seek(PHP_INT_MAX);
+if (($handle = fopen("tumor_output_2.csv", "r")) !== FALSE) {
     while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
         $tumourData[] = $data;
     }
     fclose($handle);
 }
 
-if (($handle = fopen("fuente.csv", "r")) !== FALSE) {
-    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-        if ($row == 0) {
-            $data[] = "Tumor ID Source Table";
-            $data[] = "Source Record ID";
-        } else {
-
-            var_dump("CURRENT: " . $data[1]);
-            var_dump("PREVIOUS: " . $fuentesData[$row - 1][1]);
-            var_dump("--------------------------------------------------------");
-
-            if ($data[0] != $fuentesData[$row - 1][0]) {
-                $fuenteCount++;
-            }
-            if ($data[1] != $fuentesData[$row - 1][1]) {
-                $fuenteCount = 1;
+$newData = array();
+for ($i = 0; $i < $tumourFile->key(); $i++) {
+    $row = 0;
+    if (($handle = fopen("fuente.csv", "r")) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            if ($row == 0 && !$doOnce) {
+                $doOnce = true;
+                $data[] = "Tumor ID Source Table";
+                $data[] = "Source Record ID";
+                $newData[] = $data;
             }
 
-            $data[] = $tumourData[$row][51];
-            if ($row < 10)
-                $data[] = $tumourData[$row][51] . 0 . $fuenteCount;
-            else
-                $data[] = $tumourData[$row][51] . $fuenteCount;
+            if ($row > 0) {
+                if ($data[0] != $tumourData[$row - 1][53]) {
+                    $count = 1;
+                } else {
+                    $count++;
+                }
+            }
+
+            if ($data[0] == $tumourData[$i][53]) {
+                $sourceNum = substr($tumourData[$i][54], -2);
+                if ($count < 10) {
+                    $data[] = $tumourData[$i][56] . 0 . $count;
+                } else {
+                    $data[] = $tumourData[$i][56] . $count;
+                }
+
+                $data[] = $tumourData[$i][55];
+
+                $newData[] = $data;
+            }
+
+            $fuentesData[] = $data;
+
+            $row++;
         }
-
-        $fuentesData[] = $data;
-
-        $row++;
+        fclose($handle);
     }
-    fclose($handle);
 }
 
 $handle = fopen('fuente_output.csv', 'w');
 
-foreach ($fuentesData as $line) {
+foreach ($newData as $line) {
     fputcsv($handle, $line);
 }
 
@@ -61,6 +72,9 @@ fclose($handle);
 //src rec id [22]
 
 // var_dump($tumourData);
+
 //fulcrum_id [ 0]
-//tumor id   [51]
-//--- [  ]
+//studio id  [53]
+//tumour id  [54]
+//tumour tbl [55]
+//ptn rec id [56]
