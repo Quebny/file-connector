@@ -20,7 +20,7 @@
             break;
         case "tumor.csv":
             $location = $filename;
-            $file = "study_separator";
+            $file = "tumores";
             break;
         case "fuente.csv":
             $location = $filename;

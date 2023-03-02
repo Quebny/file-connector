@@ -25,8 +25,8 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                 $newData[] = $data;
             }
 
-
-            if ($data[0] == $tumourData[$i][53]) {
+            if($i < 508){
+                            if ($data[0] == $tumourData[$i][53]) {
                 if ($count < 10) {
                     $data[] = $tumourData[$i][54] . 0 . $count;
                 } else {
@@ -48,6 +48,8 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                     }
                 }
             }
+            }
+
 
             $fuentesData[] = $data;
 
@@ -68,8 +70,8 @@ fclose($handle);
 // $str = "Patient Row Size: ";
 // echo $str . $patientFile->key();
 
-var_dump($newData[1]);
-var_dump($tumourData[1]);
+// var_dump($newData[1]);
+// var_dump($tumourData[1]);
 //fulcrum_id [ 0]
 //tumor id   [ 1]
 //id src tbl [21] //Igual a tumor id

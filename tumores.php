@@ -19,7 +19,7 @@ if (($handle = fopen("paciente_output.csv", "r")) !== FALSE) {
 $newData = array();
 for ($i = 0; $i < $patientFile->key(); $i++) {
     $row = 0;
-    if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
+    if (($handle1 = fopen("tumor.csv", "r")) !== FALSE) {
 
         while (($data = fgetcsv($handle1, 1000, ",")) !== FALSE) {
 
@@ -72,6 +72,8 @@ foreach ($newData as $line) {
 }
 
 fclose($handle);
+
+include ("study_separator.php");
 
 // var_dump($tumoursData);
 //fulcrum id    [ 0]
