@@ -1,7 +1,7 @@
 <?php
 
-if (($handle1 = fopen("tumor.csv", "r")) !== FALSE) {
-    if (($handle2 = fopen("tumor_output.csv", "w")) !== FALSE) {
+if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
+    if (($handle2 = fopen("tumor_output_2.csv", "w")) !== FALSE) {
 
         while (($data = fgetcsv($handle1, 1000, ",")) !== FALSE) {
             $array[] = $data;
@@ -22,6 +22,6 @@ if (($handle1 = fopen("tumor.csv", "r")) !== FALSE) {
     fclose($handle1);
 }
 
-include "tumores.php";
+// include "tumores.php";
 
 // var_dump($array);

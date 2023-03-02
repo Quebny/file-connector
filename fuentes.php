@@ -4,7 +4,7 @@ $row = 0;
 $count = 1;
 $doOnce = false;
 
-$tumourFile = new SplFileObject('tumor_output.csv', 'r');
+$tumourFile = new SplFileObject('tumor_output_2.csv', 'r');
 $tumourFile->seek(PHP_INT_MAX);
 if (($handle = fopen("tumor_output_2.csv", "r")) !== FALSE) {
     while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -25,25 +25,28 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                 $newData[] = $data;
             }
 
-            if ($row > 0) {
-                if ($data[0] != $tumourData[$row - 1][53]) {
-                    $count = 1;
-                } else {
-                    $count++;
-                }
-            }
 
             if ($data[0] == $tumourData[$i][53]) {
-                $sourceNum = substr($tumourData[$i][54], -2);
                 if ($count < 10) {
-                    $data[] = $tumourData[$i][56] . 0 . $count;
+                    $data[] = $tumourData[$i][54] . 0 . $count;
                 } else {
-                    $data[] = $tumourData[$i][56] . $count;
+                    $data[] = $tumourData[$i][54] . $count;
                 }
 
-                $data[] = $tumourData[$i][55];
+                $data[] = $tumourData[$i][54];
 
                 $newData[] = $data;
+
+                if ($row > 0) {
+                    // var_dump("VAR 1: " . $newData[$i-1][22]);
+                    // var_dump("VAR 2: " . $tumourData[$i][54]);
+                    // var_dump("----------------------------------------------------------------");
+                    if ($newData[$i][22] != $tumourData[$i-1][54]) {
+                        $count = 1;
+                    } else {
+                        $count++;
+                    }
+                }
             }
 
             $fuentesData[] = $data;
@@ -65,7 +68,8 @@ fclose($handle);
 // $str = "Patient Row Size: ";
 // echo $str . $patientFile->key();
 
-// var_dump($fuentesData);
+var_dump($newData[1]);
+var_dump($tumourData[1]);
 //fulcrum_id [ 0]
 //tumor id   [ 1]
 //id src tbl [21] //Igual a tumor id
