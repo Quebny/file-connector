@@ -16,8 +16,8 @@ if (($handle = fopen("paciente_output.csv", "r")) !== FALSE) {
     fclose($handle);
 }
 
-
-for ($i = 0; $i < $patientFile->key(); $i++) {
+$newData = array();
+// for ($i = 0; $i < $patientFile->key(); $i++) {
     $row = 0;
     if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
         if (($handle2 = fopen("tumor_output_2.csv", "w")) !== FALSE) {
@@ -28,28 +28,34 @@ for ($i = 0; $i < $patientFile->key(); $i++) {
                 // $data[] = "Patient ID Tumour Table";
                 // $data[] = "Patient Record ID Tumour Table";
 
-                $tumourData[] = $data;
+                $newData[] = $data;
 
                 if ($data[17] == $patientData[$i][0]) {
-                    $data[] = $patientData[$i][50];
-                    $data[] = $patientData[$i][49];
+                    $newData[] = $patientData[$i][50];
+                    $newData[] = $patientData[$i][49];
+                    // $data[] = $patientData[$i][50];
+                    // $data[] = $patientData[$i][49];
+                    // var_dump($patientData[$i][50]);
+                    // var_dump($patientData[$i][49]);
+                    var_dump($data);
                 }
-                fputcsv($handle2, $data);
+                    fputcsv($handle2, $data);
 
-
+                
+                $loop++;
             }
             fclose($handle2);
         }
 
         fclose($handle1);
     }
-}
+// }
 
 // var_dump($tumourData);
 
 $handle = fopen('tumor_output_2.csv', 'w');
 
-foreach ($tumourData as $line) {
+foreach ($newData as $line) {
     fputcsv($handle, $line);
 }
 
