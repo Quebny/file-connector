@@ -14,7 +14,9 @@ if (($handle = fopen("tumor_output_2.csv", "r")) !== FALSE) {
 }
 
 $newData = array();
+var_dump("MAX LIMIT: " . $tumourFile->key());
 for ($i = 0; $i < $tumourFile->key(); $i++) {
+    // var_dump("Counter: " . $i);
     $row = 0;
     if (($handle = fopen("fuente.csv", "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -25,7 +27,6 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                 $newData[] = $data;
             }
 
-            if($i < 508){
                             if ($data[0] == $tumourData[$i][53]) {
                 if ($count < 10) {
                     $data[] = $tumourData[$i][54] . 0 . $count;
@@ -48,11 +49,9 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                     }
                 }
             }
-            }
 
 
             $fuentesData[] = $data;
-
             $row++;
         }
         fclose($handle);
@@ -70,10 +69,11 @@ fclose($handle);
 // $str = "Patient Row Size: ";
 // echo $str . $patientFile->key();
 
-// var_dump($newData[1]);
+// var_dump($newData[2]);
 // var_dump($tumourData[1]);
 //fulcrum_id [ 0]
 //tumor id   [ 1]
+//descripcion[19]
 //id src tbl [21] //Igual a tumor id
 //src rec id [22]
 

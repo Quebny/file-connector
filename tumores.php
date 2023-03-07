@@ -16,7 +16,16 @@ if (($handle = fopen("paciente_output.csv", "r")) !== FALSE) {
     fclose($handle);
 }
 
+// if (($handle1 = fopen("tumor.csv", "r")) !== FALSE){
+//     while (($data = fgetcsv($handle1, 1000, ","))!== FALSE) {
+//         $data[16] = preg_replace("/(\r\n|\n|\r)/", " ",$data[16]);
+//     }
+//     fclose($handle1);
+// }
+
+
 $newData = array();
+// var_dump("LIMIT MAX: " . $patientFile->key());
 for ($i = 0; $i < $patientFile->key(); $i++) {
     $row = 0;
     if (($handle1 = fopen("tumor.csv", "r")) !== FALSE) {
@@ -48,12 +57,12 @@ for ($i = 0; $i < $patientFile->key(); $i++) {
 
                 $data[] = $patientData[$i][49];
                 $data[] = $patientData[$i][50];
+                $data[16] = preg_replace("/(\r\n|\n|\r)/", " ",$data[16]);
                 $newData[] = $data;
                 // var_dump($patientData[$i][50]);
                 // var_dump($patientData[$i][49]);
                 // var_dump($data);
             }
-
             $row++;
             $tumourData[] = $data;
         }
@@ -75,8 +84,9 @@ fclose($handle);
 
 include ("study_separator.php");
 
-// var_dump($tumoursData);
+// var_dump($newData);
 //fulcrum id    [ 0]
+//observaciones [16]
 //ptnt fulcr.id [17]  //Previously 16  
 //fuente id     [49]
 //tumour id     [50]  //record id tbl + tumour no.
