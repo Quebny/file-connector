@@ -36,6 +36,6 @@ if (($handle = fopen("paciente.csv", "r")) !== FALSE) {
 
 // fclose($handle);
 
-var_dump($patientIDs[129]);
+// var_dump($patientIDs[129]);
 // descripcion [41]
 // echo $row;

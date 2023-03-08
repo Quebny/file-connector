@@ -14,7 +14,7 @@ if (($handle = fopen("tumor_output_2.csv", "r")) !== FALSE) {
 }
 
 $newData = array();
-var_dump("MAX LIMIT: " . $tumourFile->key());
+// var_dump("MAX LIMIT: " . $tumourFile->key());
 for ($i = 0; $i < $tumourFile->key(); $i++) {
     // var_dump("Counter: " . $i);
     $row = 0;
@@ -27,7 +27,7 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                 $newData[] = $data;
             }
 
-                            if ($data[0] == $tumourData[$i][53]) {
+            if ($data[0] == $tumourData[$i][53]) {
                 if ($count < 10) {
                     $data[] = $tumourData[$i][54] . 0 . $count;
                 } else {
@@ -42,7 +42,7 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                     // var_dump("VAR 1: " . $newData[$i-1][22]);
                     // var_dump("VAR 2: " . $tumourData[$i][54]);
                     // var_dump("----------------------------------------------------------------");
-                    if ($newData[$i][22] != $tumourData[$i-1][54]) {
+                    if ($newData[$i][22] != $tumourData[$i - 1][54]) {
                         $count = 1;
                     } else {
                         $count++;
