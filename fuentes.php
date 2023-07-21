@@ -1,5 +1,6 @@
 <?php
 ini_set('memory_limit', '-1');
+set_time_limit(300);
 $row = 0;
 $count = 1;
 $doOnce = false;
@@ -7,19 +8,18 @@ $doOnce = false;
 $tumourFile = new SplFileObject('tumor_output_2.csv', 'r');
 $tumourFile->seek(PHP_INT_MAX);
 if (($handle = fopen("tumor_output_2.csv", "r")) !== FALSE) {
-    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+    while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
         $tumourData[] = $data;
     }
     fclose($handle);
 }
 
+
 $newData = array();
-// var_dump("MAX LIMIT: " . $tumourFile->key());
-for ($i = 0; $i < $tumourFile->key(); $i++) {
-    // var_dump("Counter: " . $i);
+for ($i = 0; $i < 3349; $i++) {
     $row = 0;
     if (($handle = fopen("fuente.csv", "r")) !== FALSE) {
-        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+        while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
             if ($row == 0 && !$doOnce) {
                 $doOnce = true;
                 $data[] = "Tumor ID Source Table";
@@ -27,14 +27,14 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                 $newData[] = $data;
             }
 
-            if ($data[0] == $tumourData[$i][53]) {
+            if ($data[0] == $tumourData[$i][75]) {
                 if ($count < 10) {
-                    $data[] = $tumourData[$i][54] . 0 . $count;
+                    $data[] = $tumourData[$i][76] . 0 . $count;
                 } else {
-                    $data[] = $tumourData[$i][54] . $count;
+                    $data[] = $tumourData[$i][76] . $count;
                 }
 
-                $data[] = $tumourData[$i][54];
+                $data[] = $tumourData[$i][76];
 
                 $newData[] = $data;
 
@@ -42,16 +42,13 @@ for ($i = 0; $i < $tumourFile->key(); $i++) {
                     // var_dump("VAR 1: " . $newData[$i-1][22]);
                     // var_dump("VAR 2: " . $tumourData[$i][54]);
                     // var_dump("----------------------------------------------------------------");
-                    if ($newData[$i][22] != $tumourData[$i - 1][54]) {
+                    if ($newData[$i][27] != $tumourData[$i - 1][76]) {
                         $count = 1;
                     } else {
                         $count++;
                     }
                 }
             }
-
-
-            $fuentesData[] = $data;
             $row++;
         }
         fclose($handle);

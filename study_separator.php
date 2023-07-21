@@ -3,14 +3,14 @@
 if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
     if (($handle2 = fopen("tumor_output_2.csv", "w")) !== FALSE) {
 
-        while (($data = fgetcsv($handle1, 1000, ",")) !== FALSE) {
+        while (($data = fgetcsv($handle1, 2000, ",")) !== FALSE) {
             $array[] = $data;
 
-            if (strpos($data[53], ",")) { //Previously 49
-                $estudios = explode(",", $data[53]);
+            if (strpos($data[75], ",")) { //Previously 49
+                $estudios = explode(",", $data[75]);
                 
                 foreach ($estudios as $id){
-                    $data[53] = $id;
+                    $data[75] = $id;
                     fputcsv($handle2, $data);
                 }
             } else {
