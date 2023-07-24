@@ -12,9 +12,15 @@ if (($handle = fopen("paciente.csv", "r")) !== FALSE) {
                 if ($row < 10) {
                     $data[] = 202200 . 0 . $row;
                     $data[] = 202200 . 0 . $row . 0 . 1;
-                } else {
+                } elseif ($row < 100) {
                     $data[] = 202200 . $row;
                     $data[] = 202200 . $row . 0 . 1;
+                } elseif ($row < 1000) {
+                    $data[] = 20220 . $row;
+                    $data[] = 20220 . $row . 0 . 1;
+                } else {
+                    $data[] = 2022 . $row;
+                    $data[] = 2022 . $row . 0 . 1;
                 }
                 $data[41] = preg_replace("/(\r\n|\n|\r)/", " ", $data[41]);
             }
