@@ -22,7 +22,7 @@ if (($handle = fopen("paciente.csv", "r")) !== FALSE) {
                     $data[] = 2022 . $row;
                     $data[] = 2022 . $row . 0 . 1;
                 }
-                $data[41] = preg_replace("/(\r\n|\n|\r)/", " ", $data[41]);
+                $data[43] = preg_replace("/(\r\n|\n|\r)/", " ", $data[43]);
             }
             fputcsv($handle2, $data);
 
@@ -33,15 +33,3 @@ if (($handle = fopen("paciente.csv", "r")) !== FALSE) {
     }
     fclose($handle);
 }
-
-// $handle = fopen('paciente_output.csv', 'w');
-
-// foreach ($patientIDs as $line) {
-//     fputcsv($handle, $line);
-// }
-
-// fclose($handle);
-
-// var_dump($patientIDs[129]);
-// descripcion [41]
-// echo $row;

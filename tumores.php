@@ -2,96 +2,55 @@
 ini_set('memory_limit', '-1');
 ini_set('max_input_time', '-1');
 ini_set('max_execution_time', '-1');
-set_time_limit(300);
-$row = 0;
-$count = 1;
-$doOnce = false;
-// $patientNo = 0;
+set_time_limit(0);
+
+$tumourFile = new SplFileObject('tumor.csv', 'r');
+$tumourFile->setFlags(SplFileObject::READ_CSV);
 
 $patientFile = new SplFileObject('paciente_output.csv', 'r');
-$patientFile->seek(PHP_INT_MAX);
-
-$tumourCount = 1;
-if (($handle = fopen("paciente_output.csv", "r")) !== FALSE) {
-    while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
-        $patientData[] = $data;
-    }
-    fclose($handle);
-}
-
-// if (($handle1 = fopen("tumor.csv", "r")) !== FALSE){
-//     while (($data = fgetcsv($handle1, 1000, ","))!== FALSE) {
-//         $data[16] = preg_replace("/(\r\n|\n|\r)/", " ",$data[16]);
-//     }
-//     fclose($handle1);
-// }
-
+$patientFile->setFlags(SplFileObject::READ_CSV);
 
 $newData = array();
-// var_dump($patientFile->key());
+$doOnce = true;
 
-for ($i = 0; $i < 802; $i++) {
-    $row = 0;
-    if (($handle1 = fopen("tumor.csv", "r")) !== FALSE) {
 
-        while (($data = fgetcsv($handle1, 0, ",")) !== FALSE) {
-            if ($row == 0 && !$doOnce) {
-                $doOnce = true;
-                $data[] = "Tumour ID";
-                $data[] = "Patient ID Tumour Table";
-                $data[] = "Patient Record ID Tumour Table";
-                $newData[] = $data;
-            }
+foreach ($tumourFile as $tumourData) {
 
-            if ($row > 0) {
-                if ($data[27] != $tumourData[$row - 1][17]) {
-                    $count = 1;
-                } else {
-                    $count++;
-                }
-            }
+    if ($doOnce) {
+        $tumourData[] = "Tumour ID";
+        $tumourData[] = "Patient ID Tumour Table";
+        $tumourData[] = "Patient Record ID Tumour Table";
+        $newData[] = $tumourData;
+        $doOnce = false;
+    }
 
-            if ($data[27] == $patientData[$i][0]) {
-                if ($count < 10) {
-                    $data[] = $patientData[$i][58] . 0 . $count;
-                } else {
-                    $data[] = $patientData[$i][58] . $count;
-                }
+    $count = 0;
 
-                $data[] = $patientData[$i][57];
-                $data[] = $patientData[$i][58];
-                // $data[16] = preg_replace("/(\r\n|\n|\r)/", " ",$data[16]);
-                $newData[] = $data;
-            }
-            $row++;
-            $tumourData[] = $data;
+    foreach ($patientFile as $patientData) {
+        if ($patientFile->key() == 0) {
+            continue;
+        }
+
+        if (isset($tumourData[24]) && $tumourData[24] == $patientData[0]) {
+            $count = ($tumourData[24] != $tumourData[23]) ? 1 : $count + 1;
+
+            $combinedData = array_merge($tumourData, array(
+                ($count < 10) ? $patientData[56] . '0' . $count : $patientData[56] . $count,
+                $patientData[55],
+                $patientData[56]
+            ));
+
+            $newData[] = $combinedData;
         }
     }
-    fclose($handle1);
 }
-// }
 
-
-$handle = fopen('tumor_output.csv', 'w');
+$outputFile = new SplFileObject('tumor_output.csv', 'w');
 
 foreach ($newData as $line) {
-    fputcsv($handle, $line);
+    $outputFile->fputcsv($line);
 }
 
-fclose($handle);
+echo "Processing complete.\n";
 
 include("study_separator.php");
-
-// var_dump($newData);
-//fulcrum id    [ 0]
-//observaciones [16]
-//ptnt fulcr.id [27] 17
-//fuente id     [49] 71
-//tumour id     [50] 72 //record id tbl + tumour no.
-//id tmr table  [51] 73 //Igual a registry number
-//record id tbl [52] 74 //Igual a ptnt record id
-
-// var_dump($patientData);
-//fulcrum id     [ 0]
-//registry no.   [49]  //Previously 57
-//ptnt record id [50]  //Previously 58

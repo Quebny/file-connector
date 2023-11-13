@@ -1,4 +1,8 @@
 <?php
+ini_set('memory_limit', '-1');
+ini_set('max_input_time', '-1');
+ini_set('max_execution_time', '-1');
+set_time_limit(300);
 
 if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
     if (($handle2 = fopen("tumor_output_2.csv", "w")) !== FALSE) {
@@ -6,11 +10,11 @@ if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
         while (($data = fgetcsv($handle1, 2000, ",")) !== FALSE) {
             $array[] = $data;
 
-            if (strpos($data[75], ",")) { //Previously 49
-                $estudios = explode(",", $data[75]);
+            if (strpos($data[76], ",")) { //Previously 49
+                $estudios = explode(",", $data[76]);
                 
                 foreach ($estudios as $id){
-                    $data[75] = $id;
+                    $data[76] = $id;
                     fputcsv($handle2, $data);
                 }
             } else {
@@ -21,7 +25,3 @@ if (($handle1 = fopen("tumor_output.csv", "r")) !== FALSE) {
     }
     fclose($handle1);
 }
-
-// include "tumores.php";
-
-// var_dump($array);
